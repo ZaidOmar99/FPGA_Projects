@@ -1,0 +1,71 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 09/04/2024 12:00:16 PM
+// Design Name: 
+// Module Name: param_right_shifter_tb
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+        
+        module param_right_shifter_tb();
+        localparam N = 3;
+        
+        logic [(2**N)-1:0] a;
+        logic [N-1:0] amt;
+        logic [(2**N)-1:0] y_tb1, y_tb2;
+        
+        param_right_shifter #(.N(3)) param_right_shifter_tb
+        (
+        .a(a),
+        .amt(amt),
+        .y(y_tb1)
+        );
+        
+        param_left_shifter #(.N(3)) param_left_shifter_tb
+        (
+        .a(a),
+        .amt(amt),
+        .y(y_tb2)
+        );                     
+        
+        initial
+        begin
+        #40 $finish;
+        end
+        
+        initial
+        begin  
+            
+            a=8'b1100_1110;
+            amt = 2'b01;
+            #10;
+            
+            a=8'b1010_1100;
+            amt = 2'b01;
+            #10;
+            
+            
+            a=8'b1001_0011;
+            amt = 2'b10;
+            #10
+            
+            a=8'b1000_0001;
+            amt = 2'b11;
+            #10;
+            
+        end
+        
+        endmodule
