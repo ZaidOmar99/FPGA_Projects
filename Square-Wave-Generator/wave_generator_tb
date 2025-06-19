@@ -1,0 +1,67 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 09/09/2024 01:19:18 PM
+// Design Name: 
+// Module Name: wave_generator_tb
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
+module wave_generator_tb( ); 
+
+localparam N = 8;
+  
+logic [N-1:0] m;
+logic [N-1:0] n;
+logic clk;
+logic reset;
+logic q;
+        
+wave_generator #(.N(N)) uut
+   (  
+        .m(m),
+        .n(n),
+        .clk(clk),
+        .reset(reset),
+        .q(q)
+    );
+    
+ // test vectors
+ initial
+        begin: CLOCK
+            clk = 1;
+        end
+      always
+        begin: CLK
+            #(5) clk = ~clk;
+        end
+ 
+ initial begin
+ 
+  
+  reset = 1'b1;
+  m = 8'b00000000;
+  n = 8'b00000001;
+  #10
+  m = 8'b00000010;
+  n = 8'b00000011;
+  #10
+  reset = 1'b0;
+  
+ end    
+    
+    
+endmodule

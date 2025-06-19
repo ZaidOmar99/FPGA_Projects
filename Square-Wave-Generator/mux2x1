@@ -1,0 +1,31 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 09/09/2024 01:01:22 PM
+// Design Name: 
+// Module Name: mux2x1
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+module mux2x1(
+    input logic [7:0] port_i0,
+    input logic [7:0] port_i1,
+    input logic port_sel,
+    output logic [7:0] port_out
+    );
+
+    assign port_out= port_sel? port_i0: port_i1;
+    
+endmodule

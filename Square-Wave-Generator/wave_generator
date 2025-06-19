@@ -1,0 +1,56 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 09/09/2024 12:48:47 PM
+// Design Name: 
+// Module Name: wave_generator
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
+module wave_generator#(parameter N = 8)
+   (  
+        input logic [3:0] m,
+        input logic [3:0] n,
+        input logic clk,
+        input logic reset,
+        output logic q // one bit, 0 or 1
+    );
+    
+  logic [N-1:0] r_reg; // logic [3:0] r_reg
+    
+  t_ff uut0 (
+        .clk(clk),
+        .t(r_next),
+        .reset(reset),
+        .q(q)
+    );
+    
+  mod_m_counter#(.M(N)) uut1 (
+
+        .clk(clk), 
+        .d(r_reg),
+        .reset(reset),
+        .max_tick(r_next)
+    );
+    
+  mux2x1 uut2 (
+        .port_i0(m * 4'd10),
+        .port_i1(n * 4'd10),
+        .port_sel(q),
+        .port_out(r_reg)
+    );
+        
+endmodule
