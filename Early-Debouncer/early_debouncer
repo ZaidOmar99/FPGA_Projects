@@ -1,0 +1,105 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 09/16/2024 01:06:00 PM
+// Design Name: 
+// Module Name: early_debouncer
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
+module early_debouncer(
+        input logic reset, clk,
+        input logic switch,
+        output logic db,
+        output logic [2:1] JA
+    );
+    
+    logic m_tick;
+    //logic db_temp;
+    mod_m_counter #(.M(1_000_000)) ticker (
+                    .clk(clk),
+                    .reset(reset),  
+                    //.q(),
+                    .max_tick(m_tick)
+    );
+
+
+    typedef enum {zero, x0, y0, z0, one, x1, y1 ,z1} state_type;
+    
+    state_type state_reg, state_next;
+    
+    always_ff @(posedge clk, posedge reset)
+        if (reset)
+                state_reg <= zero;
+            else 
+                state_reg <= state_next;
+    
+    always_comb 
+        begin
+        
+        case (state_reg)
+            zero:
+              
+                if (switch)
+                    state_next = x0;
+                        else
+                            state_next = zero;
+               
+            x0:
+                if(m_tick)
+                    state_next = y0;
+                        else 
+                            state_next = x0;
+            y0:
+                if(m_tick)
+                    state_next = z0;
+                        else
+                            state_next = y0;
+            z0:
+                if(m_tick)
+                    state_next = one;
+                        else
+                            state_next = z0;
+            one:
+                if(~switch)
+                    state_next = x1;
+                        else
+                            state_next = one;
+            x1:
+                if(m_tick)
+                    state_next = y1;
+                        else
+                            state_next = x1;
+            y1:
+                if(m_tick)
+                    state_next = z1;
+                        else
+                            state_next = y1;     
+            z1:
+                if(m_tick)
+                    state_next = zero;
+                        else
+                            state_next = z1;                                           
+        
+            default state_next = zero;
+        endcase 
+        end
+        
+        assign db = ( (state_reg == x0) || (state_reg == y0) || (state_reg == z0) || (state_reg == one) ); 
+        //assign db = db_temp;
+        assign JA[1] = switch;
+        assign JA[2] = db;
+endmodule

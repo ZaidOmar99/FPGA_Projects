@@ -1,0 +1,84 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 09/16/2024 07:00:01 PM
+// Design Name: 
+// Module Name: early_debouncer_tb
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+module early_debouncer_tb();
+        logic clk;
+        logic reset;
+        logic switch;
+        logic db;
+        
+localparam T = 10;
+        logic m_tick;
+        early_debouncer CHIP(
+            .clk(clk),
+            .reset(reset),
+            .switch(switch),
+            .db(db)
+        );
+        
+                // clock generator (20 ns clock)
+       // test vector
+    //10 ns clock running forever
+    always
+    begin
+        clk = 1'b1;
+        #(T / 2);
+        clk = 1'b0;
+        #(T / 2);
+    end
+    
+    // reset for the first half cycle
+    initial
+    begin
+        reset = 1'b1;
+        #(T / 2);
+        reset = 1'b0;
+    end
+    
+    // stimuli (just the tick
+           initial 
+        begin
+            switch = 0;
+            #10;
+        
+            switch = 1;          // debouncing 
+            #10;  
+            switch = 0;
+            #10;
+            switch = 1;
+            #10;
+            switch = 0;
+            #10;
+            switch = 1;
+            #10  
+            
+            switch = 0;
+            #10;  
+            switch = 1;
+            #10;
+            switch = 0;
+            #10;
+            switch = 1;
+            #10;
+            $finish;
+        end
+        
+endmodule
